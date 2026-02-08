@@ -1,0 +1,25 @@
+.wd-media-queries-demo {
+  background-color: green;
+  color: white;
+}
+
+@media (min-width: 750px) and (max-width: 1000px) {
+  .wd-media-queries-demo {
+    background-color: yellow;
+    color: black;
+  }
+}
+
+@media (min-width: 1000px) and (max-width: 1250px) {
+  .wd-media-queries-demo {
+    background-color: blue;
+    color: white;
+  }
+}
+
+@media (min-width: 1250px) {
+  .wd-media-queries-demo {
+    background-color: red;
+    color: white;
+  }
+}

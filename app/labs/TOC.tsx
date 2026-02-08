@@ -1,12 +1,29 @@
-import Link from "next/link";
+"use client";
+import { Nav, NavItem, NavLink } from "react-bootstrap";
+import { usePathname } from "next/navigation";
+
 export default function TOC() {
+  const pathname = usePathname();
   return (
-    <ul>
-      <li><Link href="/labs" id="wd-home-link">Home</Link></li>
-      <li><Link href="/labs/lab1" id="wd-lab1-link">Lab 1</Link></li>
-      <li><Link href="/labs/lab2" id="wd-lab2-link">Lab 2</Link></li>
-      <li><Link href="/labs/lab3" id="wd-lab3-link">Lab 3</Link></li>
-      <li><Link href="/" id="wd-kambaz-link">Kambaz</Link></li>
-    </ul>
+    <Nav variant="pills">
+      <NavItem>
+        <NavLink href="/labs" active={pathname === "/labs"}>Labs</NavLink>
+      </NavItem>
+      <NavItem>
+        <NavLink href="/labs/lab1" active={pathname === "/labs/lab1"}>Lab 1</NavLink>
+      </NavItem>
+      <NavItem>
+        <NavLink href="/labs/lab2" active={pathname.includes("/labs/lab2")}>Lab 2</NavLink>
+      </NavItem>
+      <NavItem>
+        <NavLink href="/labs/lab3" active={pathname === "/labs/lab3"}>Lab 3</NavLink>
+      </NavItem>
+      <NavItem>
+        <NavLink href="/">Kambaz</NavLink>
+      </NavItem>
+      <NavItem>
+        <NavLink href="https://github.com/311charlie/kambaz-next-js" id="wd-github">GitHub</NavLink>
+      </NavItem>
+    </Nav>
   );
 }
