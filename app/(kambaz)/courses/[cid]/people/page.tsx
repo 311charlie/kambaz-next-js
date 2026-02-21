@@ -1,7 +1,6 @@
-export default function People() {
-  return (
-    <div id="wd-people">
-      <h2>People</h2>
-    </div>
-  );
+import { redirect } from "next/navigation";
+
+export default async function PeoplePage({ params }: { params: Promise<{ cid: string }> }) {
+  const { cid } = await params;
+  redirect(`/courses/${cid}/people/table`);
 }

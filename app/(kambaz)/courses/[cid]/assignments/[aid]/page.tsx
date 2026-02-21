@@ -1,17 +1,23 @@
+"use client";
+import { useParams } from "next/navigation";
 import { Form, FormControl, FormLabel, FormSelect, Row, Col, Button } from "react-bootstrap";
+import Link from "next/link";
+import * as db from "../../../../database";
 
 export default function AssignmentEditor() {
+  const { cid, aid } = useParams();
+  const assignment = db.assignments.find((a: any) => a._id === aid);
   return (
     <div id="wd-assignments-editor">
       <FormLabel htmlFor="wd-name">Assignment Name</FormLabel>
-      <FormControl id="wd-name" defaultValue="A1 - ENV + HTML" className="mb-3" />
+      <FormControl id="wd-name" defaultValue={assignment?.title || ""} className="mb-3" />
 
       <FormControl
         as="textarea"
         id="wd-description"
         rows={5}
         className="mb-3"
-        defaultValue="The assignment is available online. Submit a link to the landing page of your Web application running on Vercel."
+        defaultValue={assignment?.description || ""}
       />
 
       <Form>
@@ -20,7 +26,7 @@ export default function AssignmentEditor() {
             <FormLabel htmlFor="wd-points" className="float-end">Points</FormLabel>
           </Col>
           <Col sm={9}>
-            <FormControl id="wd-points" type="number" defaultValue={100} />
+            <FormControl id="wd-points" type="number" defaultValue={assignment?.points || 100} />
           </Col>
         </Row>
 
@@ -89,7 +95,7 @@ export default function AssignmentEditor() {
             <FormLabel htmlFor="wd-due-date" className="float-end">Due</FormLabel>
           </Col>
           <Col sm={9}>
-            <FormControl id="wd-due-date" type="date" defaultValue="2024-05-13" />
+            <FormControl id="wd-due-date" type="date" defaultValue={assignment?.dueDate || ""} />
           </Col>
         </Row>
 
@@ -98,7 +104,7 @@ export default function AssignmentEditor() {
             <FormLabel htmlFor="wd-available-from" className="float-end">Available from</FormLabel>
           </Col>
           <Col sm={9}>
-            <FormControl id="wd-available-from" type="date" defaultValue="2024-05-06" />
+            <FormControl id="wd-available-from" type="date" defaultValue={assignment?.availableFrom || ""} />
           </Col>
         </Row>
 
@@ -107,14 +113,14 @@ export default function AssignmentEditor() {
             <FormLabel htmlFor="wd-available-until" className="float-end">Until</FormLabel>
           </Col>
           <Col sm={9}>
-            <FormControl id="wd-available-until" type="date" defaultValue="2024-05-20" />
+            <FormControl id="wd-available-until" type="date" defaultValue={assignment?.availableUntil || ""} />
           </Col>
         </Row>
 
         <hr />
         <div className="d-flex justify-content-end">
-          <Button variant="secondary" className="me-2">Cancel</Button>
-          <Button variant="danger">Save</Button>
+          <Link href={`/courses/${cid}/assignments`} className="btn btn-secondary me-2">Cancel</Link>
+          <Link href={`/courses/${cid}/assignments`} className="btn btn-danger">Save</Link>
         </div>
       </Form>
     </div>
