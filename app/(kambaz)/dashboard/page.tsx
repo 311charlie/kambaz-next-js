@@ -20,10 +20,19 @@ export default function Dashboard() {
   });
   const [showAllCourses, setShowAllCourses] = useState(false);
 
+  if (!currentUser) {
+    return (
+      <div id="wd-dashboard">
+        <h1>Dashboard</h1>
+        <p>Please <a href="/account/signin">sign in</a> to view courses.</p>
+      </div>
+    );
+  }
+
   const filteredCourses = showAllCourses
     ? courses
     : courses.filter((c: any) =>
-      enrollments.some((e: any) => e.user === currentUser?._id && e.course === c._id)
+      enrollments.some((e: any) => e.user === currentUser._id && e.course === c._id)
     );
 
   return (
