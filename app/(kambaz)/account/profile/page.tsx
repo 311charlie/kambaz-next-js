@@ -1,20 +1,24 @@
 "use client";
-import { redirect } from "next/navigation";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
 import { setCurrentUser } from "../reducer";
 import { RootState } from "../../store";
 import { Button, FormControl } from "react-bootstrap";
 
 export default function Profile() {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
   const [profile, setProfile] = useState<any>(currentUser);
   const signout = () => {
     dispatch(setCurrentUser(null));
-    redirect("/account/signin");
+    router.push("/account/signin");
   };
-  if (!currentUser) return redirect("/account/signin");
+  if (!currentUser) {
+    router.push("/account/signin");
+    return null;
+  }
   return (
     <div className="wd-profile-screen">
       <h3>Profile</h3>
