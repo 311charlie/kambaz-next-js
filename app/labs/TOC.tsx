@@ -10,13 +10,16 @@ export default function TOC() {
         <NavLink href="/labs" active={pathname === "/labs"}>Labs</NavLink>
       </NavItem>
       <NavItem>
-        <NavLink href="/labs/lab1" active={pathname === "/labs/lab1"}>Lab 1</NavLink>
+        <NavLink href="/labs/lab1" active={pathname.includes("/labs/lab1")}>Lab 1</NavLink>
       </NavItem>
       <NavItem>
         <NavLink href="/labs/lab2" active={pathname.includes("/labs/lab2")}>Lab 2</NavLink>
       </NavItem>
       <NavItem>
-        <NavLink href="/labs/lab3" active={pathname === "/labs/lab3"}>Lab 3</NavLink>
+        <NavLink href="/labs/lab3" active={pathname.includes("/labs/lab3")}>Lab 3</NavLink>
+      </NavItem>
+      <NavItem>
+        <NavLink href="/labs/lab4" active={pathname.includes("/labs/lab4")}>Lab 4</NavLink>
       </NavItem>
       <NavItem>
         <NavLink href="/">Kambaz</NavLink>
