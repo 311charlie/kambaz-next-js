@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
@@ -6,14 +7,31 @@ import { BsGripVertical } from "react-icons/bs";
 import { FaSearch, FaPlus, FaCaretDown, FaCheckCircle, FaTrash } from "react-icons/fa";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteAssignment } from "./reducer";
+import { setAssignments } from "./reducer";
 import { RootState } from "../../../store";
+import * as coursesClient from "../../client";
 
 export default function Assignments() {
   const { cid } = useParams();
   const { assignments } = useSelector((state: RootState) => state.assignmentsReducer);
   const dispatch = useDispatch();
-  const courseAssignments = assignments.filter((a: any) => a.course === cid);
+
+  const fetchAssignments = async () => {
+    const assignments = await coursesClient.findAssignmentsForCourse(cid as string);
+    dispatch(setAssignments(assignments));
+  };
+
+  const onDeleteAssignment = async (assignmentId: string) => {
+    if (window.confirm("Are you sure you want to remove this assignment?")) {
+      await coursesClient.deleteAssignment(assignmentId);
+      dispatch(setAssignments(assignments.filter((a: any) => a._id !== assignmentId)));
+    }
+  };
+
+  useEffect(() => {
+    fetchAssignments();
+  }, []);
+
   return (
     <div id="wd-assignments">
       <div className="d-flex mb-3">
@@ -42,7 +60,7 @@ export default function Assignments() {
             <IoEllipsisVertical className="ms-2 fs-4" />
           </div>
           <ListGroup className="rounded-0">
-            {courseAssignments.map((assignment: any) => (
+            {assignments.map((assignment: any) => (
               <ListGroupItem key={assignment._id} className="p-3 ps-1 d-flex align-items-center wd-lesson">
                 <BsGripVertical className="me-2 fs-3" />
                 <div className="flex-grow-1">
@@ -57,11 +75,7 @@ export default function Assignments() {
                 </div>
                 <FaCheckCircle className="text-success me-2" />
                 <FaTrash className="text-danger me-2" style={{ cursor: "pointer" }}
-                  onClick={() => {
-                    if (window.confirm("Are you sure you want to remove this assignment?")) {
-                      dispatch(deleteAssignment(assignment._id));
-                    }
-                  }} />
+                  onClick={() => onDeleteAssignment(assignment._id)} />
                 <IoEllipsisVertical className="fs-4" />
               </ListGroupItem>
             ))}
