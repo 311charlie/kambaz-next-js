@@ -1,24 +1,39 @@
 "use client";
-import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import { Form, FormControl, FormLabel, FormSelect, Row, Col, Button } from "react-bootstrap";
 import Link from "next/link";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../store";
-import { useRouter } from "next/navigation";
 import * as coursesClient from "../../../client";
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
   const router = useRouter();
-  const { assignments } = useSelector((state: RootState) => state.assignmentsReducer);
   const isNew = aid === "new";
-  const existing = assignments.find((a: any) => a._id === aid);
-  const [assignment, setAssignment] = useState<any>(
-    isNew
-      ? { title: "New Assignment", description: "", points: 100, course: cid, dueDate: "2024-05-13", availableFrom: "2024-05-06", availableUntil: "2024-05-20" }
-      : { ...existing }
-  );
+  const [assignment, setAssignment] = useState<any>({
+    title: "New Assignment",
+    description: "",
+    points: 100,
+    course: cid,
+    dueDate: "2024-05-13",
+    availableFrom: "2024-05-06",
+    availableUntil: "2024-05-20",
+  });
+  const [loading, setLoading] = useState(!isNew);
+
+  const fetchAssignment = async () => {
+    if (isNew) return;
+    const assignments = await coursesClient.findAssignmentsForCourse(cid as string);
+    const existing = assignments.find((a: any) => a._id === aid);
+    if (existing) {
+      setAssignment({
+        ...existing,
+        dueDate: existing.dueDate?.split("T")[0] || "",
+        availableFrom: existing.availableFrom?.split("T")[0] || "",
+        availableUntil: existing.availableUntil?.split("T")[0] || "",
+      });
+    }
+    setLoading(false);
+  };
 
   const handleSave = async () => {
     if (isNew) {
@@ -28,6 +43,12 @@ export default function AssignmentEditor() {
     }
     router.push(`/courses/${cid}/assignments`);
   };
+
+  useEffect(() => {
+    fetchAssignment();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div id="wd-assignments-editor">

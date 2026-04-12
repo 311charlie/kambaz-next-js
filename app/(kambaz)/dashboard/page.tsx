@@ -17,14 +17,16 @@ export default function Dashboard() {
     description: "New Description",
   });
   const [showAllCourses, setShowAllCourses] = useState(false);
+  const [enrolledCourseIds, setEnrolledCourseIds] = useState<string[]>([]);
 
   const fetchCourses = async () => {
     try {
+      const myCourses = await courseClient.findMyCourses();
+      setEnrolledCourseIds(myCourses.map((c: any) => c._id));
       if (showAllCourses) {
         const allCourses = await courseClient.fetchAllCourses();
         dispatch(setCourses(allCourses));
       } else {
-        const myCourses = await courseClient.findMyCourses();
         dispatch(setCourses(myCourses));
       }
     } catch (error) {
@@ -35,6 +37,7 @@ export default function Dashboard() {
   const onAddNewCourse = async () => {
     const newCourse = await courseClient.createCourse(course);
     dispatch(setCourses([...courses, newCourse]));
+    setEnrolledCourseIds([...enrolledCourseIds, newCourse._id]);
   };
 
   const onDeleteCourse = async (courseId: string) => {
@@ -49,12 +52,12 @@ export default function Dashboard() {
 
   const onEnroll = async (courseId: string) => {
     await courseClient.enrollInCourse(courseId);
-    fetchCourses();
+    setEnrolledCourseIds([...enrolledCourseIds, courseId]);
   };
 
   const onUnenroll = async (courseId: string) => {
     await courseClient.unenrollFromCourse(courseId);
-    fetchCourses();
+    setEnrolledCourseIds(enrolledCourseIds.filter((id) => id !== courseId));
   };
 
   useEffect(() => {
@@ -121,8 +124,11 @@ export default function Dashboard() {
                 </Link>
                 {showAllCourses && (
                   <div className="p-2">
-                    <button className="btn btn-success w-100 mb-1" onClick={() => onEnroll(c._id)}>Enroll</button>
-                    <button className="btn btn-danger w-100" onClick={() => onUnenroll(c._id)}>Unenroll</button>
+                    {enrolledCourseIds.includes(c._id) ? (
+                      <button className="btn btn-danger w-100" onClick={() => onUnenroll(c._id)}>Unenroll</button>
+                    ) : (
+                      <button className="btn btn-success w-100" onClick={() => onEnroll(c._id)}>Enroll</button>
+                    )}
                   </div>
                 )}
               </Card>

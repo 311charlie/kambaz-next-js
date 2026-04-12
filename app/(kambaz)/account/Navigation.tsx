@@ -6,8 +6,10 @@ import { RootState } from "../store";
 
 export default function AccountNavigation() {
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
-  const links = currentUser ? ["profile"] : ["signin", "signup"];
   const pathname = usePathname();
+
+  const links = currentUser ? ["profile"] : ["signin", "signup"];
+
   return (
     <div id="wd-account-navigation" className="wd list-group fs-5 rounded-0">
       {links.map((link) => (
@@ -16,6 +18,12 @@ export default function AccountNavigation() {
           {link.charAt(0).toUpperCase() + link.slice(1)}
         </Link>
       ))}
+      {currentUser && currentUser.role === "ADMIN" && (
+        <Link href="/account/users"
+          className={`list-group-item border-0 ${pathname.includes("users") ? "active" : "text-danger"}`}>
+          Users
+        </Link>
+      )}
     </div>
   );
 }
