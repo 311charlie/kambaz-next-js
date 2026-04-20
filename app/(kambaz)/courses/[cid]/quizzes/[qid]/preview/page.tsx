@@ -87,7 +87,7 @@ export default function QuizPreview() {
         <span>{question.points} pts</span>
       </Card.Header>
       <Card.Body>
-        <p className="fw-bold">{question.question}</p>
+        <div className="fw-bold" dangerouslySetInnerHTML={{ __html: question.question }} />
 
         {question.type === "MULTIPLE_CHOICE" && (
           <div>

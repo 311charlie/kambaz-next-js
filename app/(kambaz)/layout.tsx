@@ -5,6 +5,7 @@ import "./styles.css";
 import store from "./store";
 import { Provider } from "react-redux";
 import Session from "./account/Session";
+import "react-quill-new/dist/quill.snow.css";
 
 export default function KambazLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (

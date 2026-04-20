@@ -3,7 +3,10 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button, Nav, Card, FormControl, FormSelect, FormCheck, FormLabel } from "react-bootstrap";
 import { FaPlus, FaTrash, FaPencilAlt } from "react-icons/fa";
+import dynamic from "next/dynamic";
 import * as client from "../../../../client";
+
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 export default function QuizQuestionsEditor() {
   const { cid, qid } = useParams();
@@ -203,13 +206,13 @@ export default function QuizQuestionsEditor() {
       </Card.Header>
       <Card.Body>
         <FormLabel>Question</FormLabel>
-        <FormControl
-          as="textarea"
-          rows={3}
-          className="mb-3"
-          value={editingQuestion.question}
-          onChange={(e) => setEditingQuestion({ ...editingQuestion, question: e.target.value })}
-        />
+        <div className="mb-3">
+          <ReactQuill
+            theme="snow"
+            value={editingQuestion.question || ""}
+            onChange={(value: string) => setEditingQuestion({ ...editingQuestion, question: value })}
+          />
+        </div>
 
         {editingQuestion.type === "MULTIPLE_CHOICE" && (
           <div>
