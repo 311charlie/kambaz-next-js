@@ -153,7 +153,7 @@ export default function QuizQuestionsEditor() {
         </div>
       </Card.Header>
       <Card.Body>
-        <p>{question.question}</p>
+        <div dangerouslySetInnerHTML={{ __html: question.question }} />
         {question.type === "MULTIPLE_CHOICE" && (
           <ul>
             {question.choices?.map((choice: any) => (
