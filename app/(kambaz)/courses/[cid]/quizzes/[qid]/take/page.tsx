@@ -100,6 +100,34 @@ export default function TakeQuiz() {
 
   if (!quiz) return <div>Loading...</div>;
 
+  const now = new Date();
+  const availableFrom = quiz.availableFrom ? new Date(quiz.availableFrom) : null;
+  const availableUntil = quiz.availableUntil ? new Date(quiz.availableUntil) : null;
+
+  if (availableFrom && now < availableFrom) {
+    return (
+      <div className="alert alert-warning">
+        <h4>Quiz Not Available</h4>
+        <p>This quiz is not available until {availableFrom.toLocaleDateString()}</p>
+        <Button variant="secondary" onClick={() => router.push(`/courses/${cid}/quizzes`)}>
+          Back to Quizzes
+        </Button>
+      </div>
+    );
+  }
+
+  if (availableUntil && now > availableUntil) {
+    return (
+      <div className="alert alert-danger">
+        <h4>Quiz Closed</h4>
+        <p>This quiz closed on {availableUntil.toLocaleDateString()}</p>
+        <Button variant="secondary" onClick={() => router.push(`/courses/${cid}/quizzes`)}>
+          Back to Quizzes
+        </Button>
+      </div>
+    );
+  }
+
   if (!accessGranted) {
     return (
       <div id="wd-quiz-access">
